@@ -1,13 +1,36 @@
-with open('input.txt') as f:
-    content = f.readlines()
-c = 0
-parent_bagsplit = []
-for line in content:
-    if "shiny gold" in line.split(' ', 3)[3]:
-        parent = line.split(' ', 3)[:2]
-        parent_bagsplit += parent
-parents = [' '.join(x) for x in zip(parent_bagsplit[0::2], parent_bagsplit[1::2])]
-c += len(parents)
-print()
+# Stolen from here - https://www.reddit.com/r/adventofcode/comments/k8a31f/2020_day_07_solutions/gex355a?utm_source=share&utm_medium=web2x&context=3
+# I'm saving this because I need to learn how to do this. 
 
-# index = [x for x in range(len(content)) if 'shiny gold' in content[x].lower()]
+import collections
+import re
+
+lines = [line.strip() for line in open("input.txt").readlines()]
+contains = collections.defaultdict(list)
+inside = collections.defaultdict(set)
+for line in lines:
+    color = line.split(" bags contain ")[0]
+    contains[color] = []
+    if line.split(" contain ")[1] == "no other bags.":
+        continue
+    for value, inner in re.findall(r'(\d+) (.+?) bags?[,.]', line):
+        contains[color].append((int(value), inner))
+        inside[inner].add(color)
+
+contains_gold = set()
+
+
+def what_has(color):
+    for color in inside[color]:
+        contains_gold.add(color)
+        what_has(color)
+
+
+what_has("shiny gold")
+print("Part 1:", len(contains_gold))
+
+
+def bags(color):
+    return sum(value * (1+bags(inner)) for value, inner in contains[color])
+
+
+print("Part 2:", bags("shiny gold"))
