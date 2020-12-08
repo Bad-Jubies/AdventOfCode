@@ -1,5 +1,5 @@
 # Stolen from here - https://www.reddit.com/r/adventofcode/comments/k8a31f/2020_day_07_solutions/gex355a?utm_source=share&utm_medium=web2x&context=3
-# I'm saving this because I need to learn how to do this. 
+# I'm saving this because I need to learn how to do recursion
 
 import collections
 import re
